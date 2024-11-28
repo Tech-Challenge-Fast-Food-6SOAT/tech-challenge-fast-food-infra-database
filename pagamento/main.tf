@@ -1,3 +1,10 @@
+data "aws_security_group" "sg_database" {
+  filter {
+    name   = "group-name"
+    values = ["sg_database"]
+  }
+}
+
 resource "aws_db_instance" "default" {
   allocated_storage       = 10
   db_name                 = var.database_name
@@ -11,6 +18,6 @@ resource "aws_db_instance" "default" {
   multi_az                = false
   backup_retention_period = 1
   publicly_accessible     = true
-  vpc_security_group_ids  = [var.security_group]
+  vpc_security_group_ids  = [data.aws_security_group.sg_database.id]
   skip_final_snapshot     = true
 }
